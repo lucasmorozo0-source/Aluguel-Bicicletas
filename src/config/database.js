@@ -1,8 +1,27 @@
-const { Sequelize } = require('sequelize');
+import dotenv from "dotenv";
+import { Sequelize } from "sequelize";
 
-const sequelize = new Sequelize('aluguel_bicicletas', 'postgres', 'postgres', {
-    host: 'localhost',
-    dialect: 'postgres'
-});
+dotenv.config();
 
-module.exports = sequelize;
+const banco = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: "postgres",
+    define: {
+      timestamps: false,
+      freezeTableName: true,
+    },
+  }
+);
+
+try {
+  await banco.authenticate();
+  console.log("Conectado ao banco");
+} catch (error) {
+  console.log("Erro ao conectar", error);
+}
+
+export default banco;
