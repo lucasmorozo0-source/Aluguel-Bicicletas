@@ -11,10 +11,16 @@ export const criarAluguel = async (req, res) => {
     }
 
     const inicio = new Date(dataHoraInicio);
-    const fim = new Date(dataHoraFim);
+const fim = new Date(dataHoraFim);
 
-    const horas = (fim - inicio) / (1000 * 60 * 60);
-    const valorTotal = horas * plano.valorHora;
+if (fim <= inicio) {
+  return res.status(400).json({
+    erro: "A data/hora final deve ser maior que a inicial",
+  });
+}
+
+const horas = (fim - inicio) / (1000 * 60 * 60);
+const valorTotal = horas * plano.valorHora;
 
     const aluguel = await Aluguel.create({
       nomeCliente,
@@ -32,7 +38,10 @@ export const criarAluguel = async (req, res) => {
 };
 
 export const listarAlugueis = async (req, res) => {
-  const alugueis = await Aluguel.findAll();
+  const alugueis = await Aluguel.findAll({
+    include: Plano,
+  });
+
   res.json(alugueis);
 };
 

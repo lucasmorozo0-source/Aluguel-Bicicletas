@@ -1,5 +1,6 @@
 import express from "express";
 import banco from "./config/database.js";
+import cors from "cors";
 
 import {
   criarPlano,
@@ -21,6 +22,9 @@ import "./models/Plano.js";
 import "./models/Aluguel.js";
 
 const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 app.use(express.json());
 
